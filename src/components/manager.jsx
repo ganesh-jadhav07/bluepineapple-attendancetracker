@@ -26,27 +26,27 @@ const Manager = () => {
 
   return (
     <React.Fragment>
-      <Container sx={{ border: "2px solid", p: "20px" }}>
+      <Container sx={{ borderRadius:"10px", p: "20px",backgroundColor:"#D4E2EF4D" }}>
         <Stack direction={"column"} spacing={2}>
           <Typography variant="h6">Manager</Typography>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Title
             </Typography>
-            <Input placeholder="Enter the Title" onChange={(e)=>{setTitle(e.target.value)}} />
+            <Input placeholder="Enter the Title" onChange={(e)=>{setTitle(e.target.value)}} sx={{backgroundColor:"white"}} />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "43px" }}>
               Host
             </Typography>
-            <Input placeholder="Enter the Host name" onChange={(e)=>{setHost(e.target.value)}} />
+            <Input placeholder="Enter the Host name" onChange={(e)=>{setHost(e.target.value)}} sx={{backgroundColor:"white"}} />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Date
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker sx={{ maxWidth: "195px" }} onChange={(e)=> setDate(`${e.$d}`)} value={date}/>
+              <DatePicker sx={{ maxWidth: "195px",backgroundColor:"white" }} onChange={(e)=> setDate(`${e.$d}`)} value={date} />
             </LocalizationProvider>
           </Box>
           <Box sx={style}>
@@ -55,9 +55,10 @@ const Manager = () => {
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <TimePicker
-                sx={{ maxWidth: "195px" }}
+                sx={{ maxWidth: "195px" ,backgroundColor:"white"}}
                 value={time}
                 onChange={(e) => setTime(`${e.$d}`)}
+
               />
             </LocalizationProvider>
           </Box>
@@ -65,7 +66,7 @@ const Manager = () => {
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Duration
             </Typography>
-            <Input placeholder="Enter duration of session" onChange={(e)=>{setDuration(e.target.value)}} />
+            <Input placeholder="Enter duration of session" onChange={(e)=>{setDuration(e.target.value)}} sx={{backgroundColor:"white"}}/>
           </Box>
 
           {/* <Box sx={style}><Typography variant='subtitle1' sx={{mr:"20px"}}  >Geolocation</Typography><Box><TextField variant='outlined' sx={{display:"flex",flexDirection:"column"}} value={location.latitude} disabled></TextField><TextField value={location.longitude} disabled></TextField></Box></Box> */}

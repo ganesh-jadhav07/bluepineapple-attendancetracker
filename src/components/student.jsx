@@ -40,7 +40,7 @@ const Student = () => {
   return (
     <Fragment>
   
-      <Container sx={{ border: "2px solid", p: "20px",zIndex:"1" }}>
+      <Container sx={{ borderRadius:"10px", p: "20px",zIndex:"1",backgroundColor:"#D4E2EF4D" }}>
      
         <Stack direction={"column"} alignItems="center">
           <TextField
@@ -48,6 +48,7 @@ const Student = () => {
             onChange={(e) => setSessionId(e.target.value)}
             placeholder="Session Code"
             fullWidth
+            sx={{backgroundColor:"white"}}
           />
           <Button
             variant="contained"
@@ -58,7 +59,7 @@ const Student = () => {
           </Button>
         </Stack>
       </Container>
-      <Container sx={{ border: "2px solid", p: "20px" }}>
+      <Container sx={{borderRadius:"10px",mt:"20px", p: "20px",backgroundColor:"#D4E2EF4D" }}>
         <Stack direction={"column"} spacing={2}>
           <Typography variant="h6">Session</Typography>
           <Box sx={style}>
