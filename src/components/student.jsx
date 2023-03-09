@@ -49,16 +49,17 @@ const Student = () => {
 
   const attendanceMarkHandler = async () => {
     try {
+      let token = localStorage.getItem('studentToken')
       const attend = await fetch(`http://localhost:5000/attendance/addattendance/${sessionDetails.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-auth-token": localStorage.getItem('studentToken')
+          "x-auth-token": token
         }
       })
     }
     catch(e) {
-      console.log(e)
+      console.log(e)  
     }
   }
 

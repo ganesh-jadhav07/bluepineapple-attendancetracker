@@ -10,13 +10,46 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 const Manager = () => {
   const [title, setTitle] = useState("");
-
   const [host, setHost] = useState("");
-
-  const [duration, setDuration] = useState(0);
-
-  const [time, setTime] = useState();
   const [date, setDate] = useState();
+  const [startTime,setstartTime] = useState();
+  const [endTime,setendTime] = useState();
+  // const [duration, setDuration] = useState(null);
+
+  const addSessionHandler = async () => {
+    const data = {
+      title:title,
+      host:host,
+      description: "",
+      date:date,
+      startTime:startTime,
+      endTime:endTime
+    }
+    try {
+      const session = await fetch("http://localhost:5000/session/addsession", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("adminToken")
+        },
+        body: JSON.stringify(data),
+      });
+
+     let res = await session.json();
+    //  console.log(res)
+
+      if(!res.errors){
+        setTitle("");
+        setHost("");
+        setDate();
+        setstartTime();
+        setendTime();
+        console.log(res)
+      }
+  }catch(e) {
+    console.log(e)
+  }
+}
 
   const style = {
     display: "flex",
@@ -33,13 +66,13 @@ const Manager = () => {
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Title
             </Typography>
-            <Input placeholder="Enter the Title" onChange={(e)=>{setTitle(e.target.value)}} sx={{backgroundColor:"white"}} />
+            <Input placeholder="Enter the Title" value={title} onChange={(e)=>{setTitle(e.target.value)}} sx={{backgroundColor:"white"}} />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "43px" }}>
               Host
             </Typography>
-            <Input placeholder="Enter the Host name" onChange={(e)=>{setHost(e.target.value)}} sx={{backgroundColor:"white"}} />
+            <Input placeholder="Enter the Host name" value={host} onChange={(e)=>{setHost(e.target.value)}} sx={{backgroundColor:"white"}} />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
@@ -56,22 +89,33 @@ const Manager = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <TimePicker
                 sx={{ maxWidth: "195px" ,backgroundColor:"white"}}
-                value={time}
-                onChange={(e) => setTime(`${e.$d}`)}
-
+                value={startTime}
+                onChange={(e) => setstartTime(`${e.$d}`)}
               />
             </LocalizationProvider>
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
+              End Time
+            </Typography>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <TimePicker
+                sx={{ maxWidth: "195px" ,backgroundColor:"white"}}
+                value={endTime}
+                onChange={(e) => setendTime(`${e.$d}`)}
+              />
+              </LocalizationProvider>
+          </Box>
+          {/* <Box sx={style}>
+            <Typography variant="subtitle1" sx={{ mr: "43px" }}>
               Duration
             </Typography>
-            <Input placeholder="Enter duration of session" onChange={(e)=>{setDuration(e.target.value)}} sx={{backgroundColor:"white"}}/>
-          </Box>
+            <Input placeholder="Enter the Host name" value={startTime && endTime ?endTime-startTime : "0"}sx={{backgroundColor:"white"}} />
+          </Box> */}
 
           {/* <Box sx={style}><Typography variant='subtitle1' sx={{mr:"20px"}}  >Geolocation</Typography><Box><TextField variant='outlined' sx={{display:"flex",flexDirection:"column"}} value={location.latitude} disabled></TextField><TextField value={location.longitude} disabled></TextField></Box></Box> */}
           <Box>
-            <Button variant="contained">
+            <Button variant="contained" onClick={addSessionHandler}>
               <Typography variant="subtitle2">Add session</Typography>
             </Button>
           </Box>
