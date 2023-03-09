@@ -7,6 +7,7 @@ import { Fragment } from "react";
 const Student = () => {
   const [sessionId, setSessionId] = useState("");
   const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
+  const [sessionDetails, setSessionDetails] = useState({});
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -25,30 +26,59 @@ const Student = () => {
 
   const fetchSessionDetailsHandler = async () => {
     const data = { code: sessionId };
-    const response = fetch("", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    return response.json()
+    
+    try {
+      const session = await fetch(
+        `http://localhost:5000/session/getsessionbycode/${data.code}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      let d = await session.json();
+      setSessionDetails(d);
+      console.log(d)
+      // console.log(await session.json())
+
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-
+  const attendanceMarkHandler = async () => {
+    try {
+      const attend = await fetch(`http://localhost:5000/attendance/addattendance/${sessionDetails.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem('studentToken')
+        }
+      })
+    }
+    catch(e) {
+      console.log(e)
+    }
+  }
 
   return (
     <Fragment>
-  
-      <Container sx={{ borderRadius:"10px", p: "20px",zIndex:"1",backgroundColor:"#D4E2EF4D" }}>
-     
+      <Container
+        sx={{
+          borderRadius: "10px",
+          p: "20px",
+          zIndex: "1",
+          backgroundColor: "#D4E2EF4D",
+        }}
+      >
         <Stack direction={"column"} alignItems="center">
           <TextField
             value={sessionId}
             onChange={(e) => setSessionId(e.target.value)}
             placeholder="Session Code"
             fullWidth
-            sx={{backgroundColor:"white"}}
+            sx={{ backgroundColor: "white" }}
           />
           <Button
             variant="contained"
@@ -59,38 +89,45 @@ const Student = () => {
           </Button>
         </Stack>
       </Container>
-      <Container sx={{borderRadius:"10px",mt:"20px", p: "20px",backgroundColor:"#D4E2EF4D" }}>
+      <Container
+        sx={{
+          borderRadius: "10px",
+          mt: "20px",
+          p: "20px",
+          backgroundColor: "#D4E2EF4D",
+        }}
+      >
         <Stack direction={"column"} spacing={2}>
           <Typography variant="h6">Session</Typography>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Title
             </Typography>
-            <Input value={"HTML & CSS"} disabled />
+            <Input value={sessionDetails.Title} disabled />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "43px" }}>
               Host
             </Typography>
-            <Input value={"Avinash Thatte"} disabled />
+            <Input value={sessionDetails.Host} disabled />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Start Time
             </Typography>
-            <Input value={new Date("2022-12-09")} disabled />
+            <Input value={sessionDetails.StartTime} disabled />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Duration
             </Typography>
-            <Input value={"2 Hr(s)"} disabled />
+            <Input value={sessionDetails.EndTime - sessionDetails.StartTime} disabled />
           </Box>
 
           {/* <Box sx={style}><Typography variant='subtitle1' sx={{mr:"20px"}}  >Geolocation</Typography><Box><TextField variant='outlined' sx={{display:"flex",flexDirection:"column"}} value={location.latitude} disabled></TextField><TextField value={location.longitude} disabled></TextField></Box></Box> */}
           <Box>
-            <Button variant="contained">
-              <Typography variant="subtitle2">Mark Your Attendance</Typography>
+            <Button variant="contained" onClick={attendanceMarkHandler}>
+              <Typography variant="subtitle2" >Mark Your Attendance</Typography>
             </Button>
           </Box>
         </Stack>
