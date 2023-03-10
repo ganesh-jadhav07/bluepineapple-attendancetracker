@@ -41,7 +41,7 @@ const Student = () => {
 
     try {
       const session = await fetch(
-        `hhttps://bw-attendance-api.onrender.com/session/getsessionbycode/${data.code}`,
+        `https://bw-attendance-api.onrender.com/session/getsessionbycode/${data.code}`,
         {
           method: "GET",
           headers: {
@@ -71,7 +71,7 @@ const Student = () => {
     try {
       let token = localStorage.getItem("studentToken");
       const attend = await fetch(
-        `http://localhost:5000/attendance/addattendance/${sessionDetails.id}`,
+        `https://bw-attendance-api.onrender.com/attendance/addattendance/${sessionDetails.id}`,
         {
           method: "POST",
           headers: {
