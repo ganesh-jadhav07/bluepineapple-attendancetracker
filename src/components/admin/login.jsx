@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
-
 import {
   Checkbox,
   Grid,
@@ -27,26 +26,26 @@ const AdminLoginPage = () => {
   const loginDetailsHandler = async () => {
     const data = { email: email, password: password };
     try {
-    const response = await fetch("http://localhost:5000/admin/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    // console.log(await response.json())
-    await response.json().then((res) => {
-      if(!res.token) {
-        return;
-      }
-      localStorage.setItem('adminToken', res.token)
-      navigate('/manager')
-    }
-      )
-      
-    }
-    catch(e) {
-      console.log(e)
+      const response = await fetch(
+        "https://bw-attendance-api.onrender.com/admin/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      // console.log(await response.json())
+      await response.json().then((res) => {
+        if (!res.token) {
+          return;
+        }
+        localStorage.setItem("adminToken", res.token);
+        navigate("/manager");
+      });
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -62,8 +61,7 @@ const AdminLoginPage = () => {
         p: "32px",
       }}
       gap={4}
-      container
-    >
+      container>
       <Grid item sx={12}>
         <img src={""} alt={""} height={52} />
       </Grid>
@@ -71,24 +69,21 @@ const AdminLoginPage = () => {
         <TextField
           label="Username"
           sx={{ backgroundColor: "white" }}
-          onChange={(e) => setEmail(e.target.value)}
-        ></TextField>
+          onChange={(e) => setEmail(e.target.value)}></TextField>
       </Grid>
       <Grid item xs={12}>
         <TextField
           label="Password"
           sx={{ backgroundColor: "white" }}
           type={"password"}
-          onChange={(e) => setPassword(e.target.value)}
-        ></TextField>
+          onChange={(e) => setPassword(e.target.value)}></TextField>
       </Grid>
 
       <Grid item xs={12}>
         <Button
           variant="standard"
           sx={{ borderRadius: "18px !important", backgroundColor: "#6AB3F5" }}
-          onClick={loginDetailsHandler}
-        >
+          onClick={loginDetailsHandler}>
           <Typography>Login</Typography>{" "}
         </Button>
       </Grid>

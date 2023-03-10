@@ -12,44 +12,47 @@ const Manager = () => {
   const [title, setTitle] = useState("");
   const [host, setHost] = useState("");
   const [date, setDate] = useState();
-  const [startTime,setstartTime] = useState();
-  const [endTime,setendTime] = useState();
+  const [startTime, setstartTime] = useState();
+  const [endTime, setendTime] = useState();
   // const [duration, setDuration] = useState(null);
 
   const addSessionHandler = async () => {
     const data = {
-      title:title,
-      host:host,
+      title: title,
+      host: host,
       description: "",
-      date:date,
-      startTime:startTime,
-      endTime:endTime
-    }
+      date: date,
+      startTime: startTime,
+      endTime: endTime,
+    };
     try {
-      const session = await fetch("http://localhost:5000/session/addsession", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": localStorage.getItem("adminToken")
-        },
-        body: JSON.stringify(data),
-      });
+      const session = await fetch(
+        "https://bw-attendance-api.onrender.com/session/addsession",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": localStorage.getItem("adminToken"),
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
-     let res = await session.json();
-    //  console.log(res)
+      let res = await session.json();
+      //  console.log(res)
 
-      if(!res.errors){
+      if (!res.errors) {
         setTitle("");
         setHost("");
         setDate();
         setstartTime();
         setendTime();
-        console.log(res)
+        console.log(res);
       }
-  }catch(e) {
-    console.log(e)
-  }
-}
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const style = {
     display: "flex",
@@ -59,27 +62,46 @@ const Manager = () => {
 
   return (
     <React.Fragment>
-      <Container sx={{ borderRadius:"10px", p: "20px",backgroundColor:"#D4E2EF4D" }}>
+      <Container
+        sx={{ borderRadius: "10px", p: "20px", backgroundColor: "#D4E2EF4D" }}>
         <Stack direction={"column"} spacing={2}>
           <Typography variant="h6">Manager</Typography>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Title
             </Typography>
-            <Input placeholder="Enter the Title" value={title} onChange={(e)=>{setTitle(e.target.value)}} sx={{backgroundColor:"white"}} />
+            <Input
+              placeholder="Enter the Title"
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
+              sx={{ backgroundColor: "white" }}
+            />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "43px" }}>
               Host
             </Typography>
-            <Input placeholder="Enter the Host name" value={host} onChange={(e)=>{setHost(e.target.value)}} sx={{backgroundColor:"white"}} />
+            <Input
+              placeholder="Enter the Host name"
+              value={host}
+              onChange={(e) => {
+                setHost(e.target.value);
+              }}
+              sx={{ backgroundColor: "white" }}
+            />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Date
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker sx={{ maxWidth: "195px",backgroundColor:"white" }} onChange={(e)=> setDate(`${e.$d}`)} value={date} />
+              <DatePicker
+                sx={{ maxWidth: "195px", backgroundColor: "white" }}
+                onChange={(e) => setDate(`${e.$d}`)}
+                value={date}
+              />
             </LocalizationProvider>
           </Box>
           <Box sx={style}>
@@ -88,7 +110,7 @@ const Manager = () => {
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <TimePicker
-                sx={{ maxWidth: "195px" ,backgroundColor:"white"}}
+                sx={{ maxWidth: "195px", backgroundColor: "white" }}
                 value={startTime}
                 onChange={(e) => setstartTime(`${e.$d}`)}
               />
@@ -99,12 +121,12 @@ const Manager = () => {
               End Time
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <TimePicker
-                sx={{ maxWidth: "195px" ,backgroundColor:"white"}}
+              <TimePicker
+                sx={{ maxWidth: "195px", backgroundColor: "white" }}
                 value={endTime}
                 onChange={(e) => setendTime(`${e.$d}`)}
               />
-              </LocalizationProvider>
+            </LocalizationProvider>
           </Box>
           {/* <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "43px" }}>
