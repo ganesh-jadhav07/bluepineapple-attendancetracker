@@ -1,5 +1,5 @@
 import { Container, Input, Typography, Button, TextField } from "@mui/material";
-import { Stack, Box, width } from "@mui/system";
+import { Stack, Box } from "@mui/system";
 import { useState, useEffect } from "react";
 import React from "react";
 import { Fragment } from "react";
@@ -11,18 +11,28 @@ const Student = () => {
   const { state } = useLocation();
   const [alertContent, setAlertContent] = useState(state.alertdata);
   const [sessionId, setSessionId] = useState("");
-  const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
-  const [sessionDetails, setSessionDetails] = useState();
+  // const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
+  const [sessionDetails, setSessionDetails] = useState({
+    id: "",
+    Title: "",
+    Host: "",
+    Description: "",
+    Date: "",
+    StartTime: "",
+    EndTime: "",
+  });
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setLocation({ latitude, longitude });
-      },
-      (error) => console.log(error)
-    );
-  }, []);
+  const [markAttendance, setMarkAttendance] = useState(false);
+
+  // useEffect(() => {
+  //   navigator.geolocation.getCurrentPosition(
+  //     (position) => {
+  //       const { latitude, longitude } = position.coords;
+  //       setLocation({ latitude, longitude });
+  //     },
+  //     (error) => console.log(error)
+  //   );
+  // }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -51,17 +61,34 @@ const Student = () => {
       );
       let d = await session.json();
       if (!d.errors) {
-        setSessionDetails(d);
+        setSessionDetails({
+          id: d.id,
+          Title: d.Title,
+          Host: d.Host,
+          Description: d.Description,
+          Date: d.Date,
+          StartTime: d.StartTime,
+          EndTime: d.EndTime,
+        });
+        setMarkAttendance(true);
       } else {
-        setSessionDetails();
+        setSessionDetails({
+          id: "",
+          Title: "",
+          Host: "",
+          Description: "",
+          Date: "",
+          StartTime: "",
+          EndTime: "",
+        });
         setAlertContent({
           msg: d.errors[0].msg,
           type: "error",
         });
+        setMarkAttendance(false);
       }
 
       console.log(d);
-      // console.log(await session.json())
     } catch (e) {
       console.log(e);
     }
@@ -70,7 +97,7 @@ const Student = () => {
   const attendanceMarkHandler = async () => {
     try {
       let token = localStorage.getItem("studentToken");
-      const attend = await fetch(
+      await fetch(
         `https://bw-attendance-api.onrender.com/attendance/addattendance/${sessionDetails.id}`,
         {
           method: "POST",
@@ -128,28 +155,37 @@ const Student = () => {
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Title
             </Typography>
-            <Input value={sessionDetails?.Title} disabled />
+            <Input value={sessionDetails.Title} disabled />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "43px" }}>
               Host
             </Typography>
-            <Input value={sessionDetails?.Host} disabled />
+            <Input value={sessionDetails.Host} disabled />
+          </Box>
+          <Box sx={style}>
+            <Typography variant="subtitle1" sx={{ mr: "43px" }}>
+              Description
+            </Typography>
+            <Input value={sessionDetails.Description} disabled />
+          </Box>
+          <Box sx={style}>
+            <Typography variant="subtitle1" sx={{ mr: "43px" }}>
+              Date
+            </Typography>
+            <Input value={sessionDetails.Date} disabled />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Start Time
             </Typography>
-            <Input value={sessionDetails?.StartTime} disabled />
+            <Input value={sessionDetails.StartTime} disabled />
           </Box>
           <Box sx={style}>
             <Typography variant="subtitle1" sx={{ mr: "60px" }}>
               Duration
             </Typography>
-            <Input
-              value={sessionDetails?.EndTime - sessionDetails?.StartTime}
-              disabled
-            />
+            <Input value={sessionDetails.EndTime} disabled />
           </Box>
 
           {/* <Box sx={style}><Typography variant='subtitle1' sx={{mr:"20px"}}  >Geolocation</Typography><Box><TextField variant='outlined' sx={{display:"flex",flexDirection:"column"}} value={location.latitude} disabled></TextField><TextField value={location.longitude} disabled></TextField></Box></Box> */}
@@ -157,7 +193,7 @@ const Student = () => {
             <Button
               variant="contained"
               onClick={attendanceMarkHandler}
-              disabled={sessionDetails ? false : true}>
+              disabled={!markAttendance}>
               <Typography variant="subtitle2">Mark Your Attendance</Typography>
             </Button>
           </Box>
